@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comandas Ativas - Super Zezinho</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>📋 Clientes Ativos</h1>
+            <p>Visualizar e editar comandas em andamento</p>
+        </header>
+
+        <div style="margin-bottom: 30px;">
+            <button class="btn btn-secondary" onclick="voltarAoInicio()">🏠 Voltar ao Início</button>
+            <button class="btn btn-primary" onclick="carregarComandasAtivas()" style="margin-left: 10px;">🔄 Atualizar Lista</button>
+        </div>
+
+        <!-- Estatísticas -->
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number" id="totalComandas">-</div>
+                <div class="stat-label">Comandas Ativas</div>
+            </div>
+        </div>
+
+        <!-- Lista de Comandas -->
+        <div style="background: white; border-radius: 15px; padding: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.1);">
+            <div style="margin-bottom: 20px;">
+                <h3 style="color: #2ECC71; margin: 0 0 15px 0;">Comandas em Andamento</h3>
+                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                    <input 
+                        type="text" 
+                        id="buscaComanda" 
+                        placeholder="🔍 Buscar por número da comanda..." 
+                        style="flex: 1; min-width: 200px; padding: 10px 15px; border: 2px solid #E8F8F5; border-radius: 8px; font-size: 14px; box-sizing: border-box;"
+                        oninput="filtrarComandas()"
+                        onkeyup="if(event.key==='Enter') filtrarComandas()"
+                    >
+                    <button class="btn btn-secondary" onclick="limparBusca()" style="padding: 10px 20px; white-space: nowrap; flex-shrink: 0;">Limpar</button>
+                </div>
+            </div>
+            <div id="listaComandas">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Carregando comandas...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/main.js"></script>
+    <script>
+        // As funções verDetalhesComanda, editarComanda e cancelarComanda
+        // já estão implementadas em main.js, não precisam ser redefinidas aqui.
+        
+        // Carregar comandas quando a página carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            carregarComandasAtivas();
+        });
+    </script>
+</body>
+</html>

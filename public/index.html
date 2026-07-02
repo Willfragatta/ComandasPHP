@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Zezinho - Sistema de Comandas</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo-container">
+                <img src="assets/logo.jpeg" alt="Super Zezinho" class="logo">
+                <div>
+                <h1>Super Zezinho</h1>
+                    <p>Sistema de Comandas Móveis</p>
+            </div>
+        </div>
+        </header>
+
+        <!-- Dashboard Principal -->
+        <div class="dashboard">
+            <div class="dashboard-card">
+                <h3>🍽️ Nova Comanda</h3>
+                
+                <a href="#" class="btn btn-primary" onclick="mostrarModalSelecaoAtendente(); return false;">Iniciar Comanda</a>
+            </div>
+            
+            <div class="dashboard-card">
+                <h3>📋 Clientes Ativos</h3>
+                
+                <a href="pages/comandas-ativas.html" class="btn btn-secondary">Ver Comandas</a>
+            </div>
+        </div>
+
+        <!-- Estatísticas -->
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number" id="totalComandas">-</div>
+                <div class="stat-label">CLientes Ativos</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalProdutos">-</div>
+                <div class="stat-label">Produtos Cadastrados</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

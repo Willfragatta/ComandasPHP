@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nova Comanda - Super Zezinho</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🍽️ Nova Comanda</h1>
+            <p>Criar uma nova comanda para atendimento</p>
+        </header>
+
+
+        <!-- Formulário da Comanda -->
+        <div style="background: white; border-radius: 15px; padding: 30px; margin-bottom: 30px; box-shadow: 0 8px 25px rgba(0,0,0,0.1);">
+            <h3 style="color: #2ECC71; margin-bottom: 20px;">Informações da Comanda</h3>
+        
+        <div class="form-group">
+                <label for="numeroComanda">Digite ou scaneie o número da comanda:</label>
+                <input type="text" id="numeroComanda" placeholder="Digite ou scaneie o número da comanda física" inputmode="numeric" pattern="[0-9]*" required autofocus>
+        </div>
+
+        <div class="form-group">
+                <label for="buscaProduto">Digite código, barras ou descrição:</label>
+            <input type="text" id="buscaProduto" placeholder="Digite código, barras ou descrição..." oninput="buscarProdutos(this.value)" onkeyup="if(event.key==='Enter') adicionarProduto()">
+            <div id="resultadosBusca" style="position: absolute; background: white; border: 2px solid #E8F8F5; border-top: none; border-radius: 0 0 10px 10px; max-height: 200px; overflow-y: auto; z-index: 100; display: none;"></div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div class="form-group">
+                <label for="quantidadeProduto">Quantidade:</label>
+                <input type="number" id="quantidadeProduto" value="1" min="0.01" step="0.001" oninput="validarQuantidadeInput()">
+            </div>
+            <div class="form-group">
+                    <button class="btn btn-primary" onclick="adicionarProduto()" style="margin-top: 25px;">➕ Adicionar Produto</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lista de Produtos -->
+        <div style="background: white; border-radius: 15px; padding: 30px; margin-bottom: 30px; box-shadow: 0 8px 25px rgba(0,0,0,0.1);">
+            <h3 style="color: #2ECC71; margin-bottom: 20px;">Produtos da Comanda</h3>
+            
+            <div id="tabelaProdutos" style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+                    <thead>
+                        <tr style="background: #E8F8F5; color: #2ECC71;">
+                            <th style="padding: 12px; text-align: left; border: 1px solid #D5DBDB;">Descrição</th>
+                            <th style="padding: 12px; text-align: center; border: 1px solid #D5DBDB; width: 100px;">Quant</th>
+                            <th style="padding: 12px; text-align: right; border: 1px solid #D5DBDB; width: 120px;">Total</th>
+                            <th style="padding: 12px; text-align: center; border: 1px solid #D5DBDB; width: 80px;">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="corpoTabelaProdutos">
+                        <!-- Produtos serão inseridos aqui -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div style="background: #F8F9FA; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; text-align: center;">
+                    <div>
+                        <strong style="color: #2ECC71;">Total Itens:</strong><br>
+                        <span id="totalItens" style="font-size: 18px; font-weight: bold;">0</span>
+                    </div>
+                    <div>
+                        <strong style="color: #2ECC71;">Total Valor:</strong><br>
+                        <span id="totalValor" style="font-size: 18px; font-weight: bold;">R$ 0,00</span>
+                    </div>
+                    <div>
+                        <strong style="color: #2ECC71;">Total Peso:</strong><br>
+                        <span id="totalPeso" style="font-size: 18px; font-weight: bold;">0,000 Kg</span>
+                    </div>
+            </div>
+        </div>
+
+            <div style="text-align: center;">
+                <button class="btn btn-success" onclick="salvarComanda()" style="padding: 15px 30px; font-size: 16px;">💾 Salvar Comanda</button>
+        </div>
+        
+        <!-- MUDANÇA 2: Botão "Voltar ao Início" movido para o final da página -->
+        <div style="text-align: center; margin-top: 30px; padding-top: 30px; border-top: 2px solid #E8F8F5;">
+            <button class="btn btn-secondary" onclick="voltarAoInicio()" style="background: linear-gradient(135deg, #95A5A6 0%, #7F8C8D 100%);">🏠 Voltar ao Início</button>
+        </div>
+        </div>
+    </div>
+
+    <script src="../js/main.js"></script>
+</body>
+</html>

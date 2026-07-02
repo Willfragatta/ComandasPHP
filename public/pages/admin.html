@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Administrativo - Super Zezinho</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/admin.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Header -->
+        <header class="admin-header">
+            <div class="admin-header-content">
+                <div class="admin-logo">
+                    <h1>📊 Painel Administrativo</h1>
+                    <p>Super Zezinho - Sistema de Comandas</p>
+                </div>
+                <div class="admin-nav">
+                    <button class="nav-btn active" data-module="dashboard" onclick="mostrarModulo('dashboard')">
+                        📈 Dashboard
+                    </button>
+                    <button class="nav-btn" data-module="usuarios" onclick="mostrarModulo('usuarios')">
+                        👥 Usuários
+                    </button>
+                    <button class="nav-btn" data-module="vendedores" onclick="mostrarModulo('vendedores')">
+                        🏆 Vendedores
+                    </button>
+                    <button class="nav-btn" data-module="produtos" onclick="mostrarModulo('produtos')">
+                        📦 Produtos
+                    </button>
+                    <button class="nav-btn" data-module="gerenciar-produtos" onclick="mostrarModulo('gerenciar-produtos')">
+                        ⚙️ Gerenciar Produtos
+                    </button>
+                    <button class="nav-btn" data-module="gamificacao" onclick="mostrarModulo('gamificacao')">
+                        🎯 Gamificação
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Conteúdo Principal -->
+        <main class="admin-main">
+            <!-- Módulo: Dashboard -->
+            <div id="modulo-dashboard" class="admin-module active">
+                <div class="module-header">
+                    <h2>📈 Dashboard de Vendas</h2>
+                </div>
+
+                <!-- Filtros de Período -->
+                <div class="filters-bar">
+                    <select id="filtro-periodo-dashboard" class="filter-select" onchange="atualizarFiltrosDashboard()">
+                        <option value="hoje">Hoje</option>
+                        <option value="semana">Esta Semana</option>
+                        <option value="mes">Este Mês</option>
+                        <option value="semana-anterior">Semana Anterior</option>
+                        <option value="mes-anterior">Mês Anterior</option>
+                        <option value="customizado">Intervalo Customizado</option>
+                    </select>
+                    <div id="intervalo-customizado-dashboard" style="display: none;">
+                        <input type="date" id="data-inicio-dashboard" class="filter-select" style="margin-right: 10px;">
+                        <input type="date" id="data-fim-dashboard" class="filter-select" style="margin-right: 10px;">
+                        <button class="btn btn-primary btn-small" onclick="aplicarIntervaloDashboard()">Aplicar</button>
+                    </div>
+                    <select id="filtro-semana-dashboard" class="filter-select" style="display: none;" onchange="carregarDashboard()">
+                        <option value="0">Esta Semana</option>
+                    </select>
+                    <select id="filtro-mes-dashboard" class="filter-select" style="display: none;" onchange="carregarDashboard()">
+                        <option value="0">Este Mês</option>
+                    </select>
+                </div>
+                
+                <!-- Cards de Métricas -->
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-icon">💰</div>
+                        <div class="metric-content">
+                            <div class="metric-label" id="label-vendas">Vendas do Período</div>
+                            <div class="metric-value" id="vendas-periodo">R$ 0,00</div>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">🍽️</div>
+                        <div class="metric-content">
+                            <div class="metric-label" id="label-comandas">Comandas do Período</div>
+                            <div class="metric-value" id="comandas-periodo">0</div>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">📊</div>
+                        <div class="metric-content">
+                            <div class="metric-label">Ticket Médio</div>
+                            <div class="metric-value" id="ticket-medio">R$ 0,00</div>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">❌</div>
+                        <div class="metric-content">
+                            <div class="metric-label" id="label-canceladas">Comandas Canceladas</div>
+                            <div class="metric-value" id="comandas-canceladas">0</div>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">👥</div>
+                        <div class="metric-content">
+                            <div class="metric-label">Atendentes Ativos</div>
+                            <div class="metric-value" id="atendentes-ativos">0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Comparação Rápida -->
+                <div style="margin-top: 30px;">
+                    <h3 style="margin-bottom: 20px;">📊 Comparação Rápida</h3>
+                    <div class="metrics-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+                        <div class="metric-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                            <div class="metric-icon">📅</div>
+                            <div class="metric-content">
+                                <div class="metric-label">Vendas Esta Semana</div>
+                                <div class="metric-value" id="vendas-semana" style="color: white;">R$ 0,00</div>
+                            </div>
+                        </div>
+                        <div class="metric-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white;">
+                            <div class="metric-icon">📆</div>
+                            <div class="metric-content">
+                                <div class="metric-label">Vendas Este Mês</div>
+                                <div class="metric-value" id="vendas-mes" style="color: white;">R$ 0,00</div>
+                            </div>
+                        </div>
+                        <div class="metric-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white;">
+                            <div class="metric-icon">💰</div>
+                            <div class="metric-content">
+                                <div class="metric-label">Vendas Hoje</div>
+                                <div class="metric-value" id="vendas-hoje" style="color: white;">R$ 0,00</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Módulo: Usuários -->
+            <div id="modulo-usuarios" class="admin-module">
+                <div class="module-header">
+                    <h2>👥 Gestão de Usuários</h2>
+                    <button class="btn btn-primary" onclick="abrirModalUsuario()">+ Novo Usuário</button>
+                </div>
+
+                <!-- Busca e Filtros -->
+                <div class="filters-bar">
+                    <input type="text" id="busca-usuario" class="search-input" placeholder="Buscar por nome ou código..." onkeyup="filtrarUsuarios()">
+                    <select id="filtro-status-usuario" class="filter-select" onchange="filtrarUsuarios()">
+                        <option value="todos">Todos</option>
+                        <option value="ativo">Apenas Ativos</option>
+                        <option value="inativo">Apenas Inativos</option>
+                    </select>
+                </div>
+
+                <!-- Tabela de Usuários -->
+                <div class="table-container">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Código</th>
+                                <th>Nome</th>
+                                <th>Status</th>
+                                <th>Data Criação</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabela-usuarios">
+                            <tr>
+                                <td colspan="6" class="loading">Carregando usuários...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Módulo: Vendedores -->
+            <div id="modulo-vendedores" class="admin-module">
+                <div class="module-header">
+                    <h2>🏆 Ranking de Vendedores</h2>
+                </div>
+
+                <!-- Filtros -->
+                <div class="filters-bar">
+                    <select id="filtro-periodo-vendedores" class="filter-select" onchange="atualizarFiltrosPeriodoVendedores()">
+                        <option value="hoje">Hoje</option>
+                        <option value="semana">Esta Semana</option>
+                        <option value="mes">Este Mês</option>
+                        <option value="customizado">Intervalo Customizado</option>
+                    </select>
+                    <div id="intervalo-customizado-vendedores" style="display: none;">
+                        <input type="date" id="data-inicio-vendedores" class="filter-select" style="margin-right: 10px;">
+                        <input type="date" id="data-fim-vendedores" class="filter-select" style="margin-right: 10px;">
+                        <button class="btn btn-primary btn-small" onclick="aplicarIntervaloVendedores()">Aplicar</button>
+                    </div>
+                    <select id="filtro-tipo-vendedores" class="filter-select" onchange="carregarRankingVendedores()">
+                        <option value="valor">Por Valor</option>
+                        <option value="quantidade">Por Quantidade</option>
+                    </select>
+                </div>
+
+                <!-- Ranking -->
+                <div class="ranking-container">
+                    <div id="ranking-vendedores">
+                        <div class="loading">Carregando ranking...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Módulo: Produtos -->
+            <div id="modulo-produtos" class="admin-module">
+                <div class="module-header">
+                    <h2>📦 Produtos Mais Vendidos</h2>
+                </div>
+
+                <!-- Filtros -->
+                <div class="filters-bar">
+                    <select id="filtro-periodo-produtos" class="filter-select" onchange="atualizarFiltrosPeriodoProdutos()">
+                        <option value="hoje">Hoje</option>
+                        <option value="semana">Esta Semana</option>
+                        <option value="mes">Este Mês</option>
+                        <option value="customizado">Intervalo Customizado</option>
+                    </select>
+                    <div id="intervalo-customizado-produtos" style="display: none;">
+                        <input type="date" id="data-inicio-produtos" class="filter-select" style="margin-right: 10px;">
+                        <input type="date" id="data-fim-produtos" class="filter-select" style="margin-right: 10px;">
+                        <button class="btn btn-primary btn-small" onclick="aplicarIntervaloProdutos()">Aplicar</button>
+                    </div>
+                    <select id="filtro-ordem-produtos" class="filter-select" onchange="carregarProdutosVendidos()">
+                        <option value="quantidade">Por Quantidade</option>
+                        <option value="valor">Por Valor</option>
+                    </select>
+                </div>
+
+                <!-- Tabela de Produtos -->
+                <div class="table-container">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Posição</th>
+                                <th>Produto</th>
+                                <th>Quantidade</th>
+                                <th>Valor Total</th>
+                                <th>Unidade</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabela-produtos">
+                            <tr>
+                                <td colspan="5" class="loading">Carregando produtos...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Módulo: Gerenciar Produtos -->
+            <div id="modulo-gerenciar-produtos" class="admin-module">
+                <div class="module-header">
+                    <h2>⚙️ Gerenciar Produtos</h2>
+                    <button class="btn btn-primary" onclick="abrirModalProduto()">+ Novo Produto</button>
+                </div>
+
+                <!-- Busca e Filtros -->
+                <div class="filters-bar">
+                    <input type="text" id="busca-produto" class="search-input" placeholder="Buscar por código, barras ou descrição..." onkeyup="filtrarProdutos()">
+                    <select id="filtro-status-produto" class="filter-select" onchange="filtrarProdutos()">
+                        <option value="todos">Todos</option>
+                        <option value="ativo">Apenas Ativos</option>
+                        <option value="inativo">Apenas Inativos</option>
+                    </select>
+                </div>
+
+                <!-- Tabela de Produtos -->
+                <div class="table-container">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Código de Barras</th>
+                                <th>Descrição</th>
+                                <th>Preço</th>
+                                <th>Unidade</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabela-gerenciar-produtos">
+                            <tr>
+                                <td colspan="7" class="loading">Carregando produtos...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Módulo: Gamificação -->
+            <div id="modulo-gamificacao" class="admin-module">
+                <div class="module-header">
+                    <h2>🎯 Melhores Resultados</h2>
+                </div>
+
+                <!-- Filtros de Período -->
+                <div class="filters-bar">
+                    <select id="filtro-tipo-gamificacao" class="filter-select" onchange="atualizarFiltrosGamificacao()">
+                        <option value="dia">Atendentes do Dia</option>
+                        <option value="semana">Atendentes da Semana</option>
+                        <option value="mes">Atendentes do Mês</option>
+                        <option value="customizado">Período Customizado</option>
+                    </select>
+                    <div id="periodo-customizado-gamificacao" style="display: none;">
+                        <input type="date" id="data-inicio-gamificacao" class="filter-select" style="margin-right: 10px;">
+                        <input type="date" id="data-fim-gamificacao" class="filter-select" style="margin-right: 10px;">
+                        <button class="btn btn-primary btn-small" onclick="aplicarPeriodoGamificacao()">Aplicar</button>
+                    </div>
+                    <select id="filtro-semana-gamificacao" class="filter-select" style="display: none;" onchange="carregarGamificacao()">
+                        <option value="0">Esta Semana</option>
+                    </select>
+                    <select id="filtro-mes-gamificacao" class="filter-select" style="display: none;" onchange="carregarGamificacao()">
+                        <option value="0">Este Mês</option>
+                    </select>
+                </div>
+
+                <!-- Badges -->
+                <div class="badges-section">
+                    <h3 id="titulo-badges">🏆 Atendente do Dia</h3>
+                    <div id="badges-dia" class="badges-grid">
+                        <div class="loading">Carregando Atendentes...</div>
+                    </div>
+                </div>
+
+                <!-- Hall da Fama -->
+                <div class="hall-fame-section">
+                    <h3 id="titulo-hall-fama">👑 Melhores Atendentes - Este Mês</h3>
+                    <div id="hall-fama" class="hall-fame-grid">
+                        <div class="loading">Carregando hall da fama...</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal de Produto -->
+    <div id="modal-produto" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="titulo-modal-produto">Novo Produto</h3>
+                <button class="modal-close" onclick="fecharModalProduto()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="form-produto" onsubmit="salvarProduto(event)">
+                    <input type="hidden" id="produto-id">
+                    
+                    <div class="form-group">
+                        <label for="produto-codigo">Código Interno *</label>
+                        <input type="text" id="produto-codigo" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="produto-barras">Código de Barras</label>
+                        <input type="text" id="produto-barras">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="produto-descricao">Descrição *</label>
+                        <input type="text" id="produto-descricao" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="produto-preco">Preço Unitário *</label>
+                        <input type="number" id="produto-preco" step="0.01" min="0" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="produto-unidade">Unidade *</label>
+                        <select id="produto-unidade" required>
+                            <option value="UN">UN</option>
+                            <option value="KG">KG</option>
+                            <option value="LT">LT</option>
+                            <option value="CX">CX</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="produto-tributacao">Código de Tributação</label>
+                        <input type="text" id="produto-tributacao" value="123">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="produto-ativo" checked>
+                            Produto Ativo
+                        </label>
+                    </div>
+                    
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" onclick="fecharModalProduto()">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Salvar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Usuário -->
+    <div id="modal-usuario" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-usuario-titulo">Novo Usuário</h3>
+                <button class="modal-close" onclick="fecharModalUsuario()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="form-usuario" onsubmit="salvarUsuario(event)">
+                    <input type="hidden" id="usuario-id">
+                    <div class="form-group">
+                        <label for="usuario-nome">Nome *</label>
+                        <input type="text" id="usuario-nome" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="usuario-codigo">Código *</label>
+                        <input type="text" id="usuario-codigo" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="usuario-ativo">Status</label>
+                        <select id="usuario-ativo">
+                            <option value="true">Ativo</option>
+                            <option value="false">Inativo</option>
+                        </select>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-secondary" onclick="fecharModalUsuario()">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Salvar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="../js/main.js"></script>
+    <script src="../js/admin.js"></script>
+</body>
+</html>
+
